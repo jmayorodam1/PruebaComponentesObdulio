@@ -1,0 +1,283 @@
+﻿@model DataBaseFirst.Models.ClasesViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div id="componentes">
+
+<h3>Componentes</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Coste</th>
+            <th>Número de Serie</th>
+            <th>Calor</th>
+            <th>Cores</th>
+            <th>Descripción</th>
+            <th>Megas</th>
+            <th>Tipo Componente</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var componente in Model.Componentes)
+            {
+                <tr>
+                    <td>@componente.Id</td>
+                    <td>@componente.Coste</td>
+                    <td>@componente.NumeroSerie</td>
+                    <td>@componente.Calor</td>
+                    <td>@componente.Cores</td>
+                    <td>@componente.Descripcion</td>
+                    <td>@componente.Megas</td>
+                    <td>@componente.TipoComponente</td>
+                    <td>
+                        <a class="btn-edit" data-id="@componente.Id">Edit</a> |
+                        <a href="@Url.Action("Create")" class="btn-create">Create</a>
+
+                        <a asp-action="Details" asp-route-id="@componente.Id">Details</a> |
+                        <a class="btn-delete" data-id="@componente.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">No hay componentes disponibles.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+<div id="ordenadores">
+
+<h3>Ordenadores</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>CalorTotal</th>
+            <th>CoresTotal</th>
+            <th>MegasTotal</th>
+            <th>PrecioTotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var componente in Model.Ordenadores)
+            {
+                <tr>
+                    <td>@componente.Id</td>
+                    <td>@componente.CalorTotal</td>
+                    <td>@componente.CoresTotal</td>
+                    <td>@componente.MegasTotal</td>
+                    <td>@componente.PrecioTotal</td>
+                    <td>
+                        <a class="btn-edit" data-id="@componente.Id">Edit</a> |
+                        <a href="@Url.Action("CreateOrdenador")" class="btn-create">Create</a>
+
+                        <a asp-action="Details" asp-route-id="@componente.Id">Details</a> |
+                        <a class="btn-delete" data-id="@componente.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">No hay componentes disponibles.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+<div id="facturas">
+    <h3>Facturas</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>PrecioTotal</th>
+                <th>CalorTotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                @foreach (var componente in Model.Facturas)
+                {
+                    <tr>
+                        <td>@componente.Id</td>
+                        <td>@componente.PrecioTotal</td>
+                        <td>@componente.CalorTotal</td>
+                        <td>
+                            <a class="btn-edit" data-id="@componente.Id">Edit</a> |
+                            <a href="@Url.Action("CreateFactura")" class="btn-create">Create</a>
+
+                            <a asp-action="Details" asp-route-id="@componente.Id">Details</a> |
+                            <a class="btn-delete" data-id="@componente.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">No hay componentes disponibles.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+<div>
+    <a asp-action="Componentes">Ver Lista de Componentes</a>
+</div>
+
+<div class="edit-form" style="display: none;">
+    <h3>Edit Component</h3>
+    <input type="hidden" class="edit-id" />
+    <label for="edit-coste">Coste:</label>
+    <input type="number" class="edit-coste" step="0.01" />
+    <label for="edit-descripcion">Descripción:</label>
+    <input type="text" class="edit-descripcion" />
+    <button class="btn-save-edit">Save</button>
+    <button class="btn-cancel-edit">Cancel</button>
+</div>
+<div>
+    <a asp-action="Ordenadores">Ver Lista de Ordenadores</a>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Componentes section
+            const componentesSection = document.getElementById('componentes-section');
+            const componentesEditForms = componentesSection.querySelectorAll('.edit-form');
+            const componentesEditButtons = componentesSection.querySelectorAll('.btn-edit');
+            const componentesDeleteButtons = componentesSection.querySelectorAll('.btn-delete');
+            const componentesSaveEditButtons = componentesSection.querySelectorAll('.btn-save-edit');
+            const componentesCancelEditButtons = componentesSection.querySelectorAll('.btn-cancel-edit');
+
+            // Ordenadores section
+            const ordenadoresSection = document.getElementById('ordenadores-section');
+            const ordenadoresEditForms = ordenadoresSection.querySelectorAll('.edit-form');
+            const ordenadoresEditButtons = ordenadoresSection.querySelectorAll('.btn-edit');
+            const ordenadoresDeleteButtons = ordenadoresSection.querySelectorAll('.btn-delete');
+            const ordenadoresSaveEditButtons = ordenadoresSection.querySelectorAll('.btn-save-edit');
+            const ordenadoresCancelEditButtons = ordenadoresSection.querySelectorAll('.btn-cancel-edit');
+
+            // Facturas section
+            const facturasSection = document.getElementById('facturas-section');
+            const facturasEditForms = facturasSection.querySelectorAll('.edit-form');
+            const facturasEditButtons = facturasSection.querySelectorAll('.btn-edit');
+            const facturasDeleteButtons = facturasSection.querySelectorAll('.btn-delete');
+            const facturasSaveEditButtons = facturasSection.querySelectorAll('.btn-save-edit');
+            const facturasCancelEditButtons = facturasSection.querySelectorAll('.btn-cancel-edit');
+
+            // Componentes section actions
+            componentesEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    componentesEditForms[index].style.display = 'block';
+                });
+            });
+
+            componentesSaveEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    const id = componentesEditForms[index].querySelector('.edit-id').value;
+                    const coste = componentesEditForms[index].querySelector('.edit-coste').value;
+                    const descripcion = componentesEditForms[index].querySelector('.edit-descripcion').value;
+                    // ...
+                    componentesEditForms[index].style.display = 'none';
+                });
+            });
+
+            componentesCancelEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    // Clear form fields and hide the edit form
+                    componentesEditForms[index].style.display = 'none';
+                });
+            });
+
+            componentesDeleteButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    const id = btn.getAttribute('data-id');
+                    if (confirm('¿Estás seguro de que deseas borrar el componente con ID ' + id + '?')) {
+                        document.getElementById('row-' + id).style.display = 'none';
+                        // ...
+                    }
+                });
+            });
+
+            // Ordenadores section actions
+            ordenadoresEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    ordenadoresEditForms[index].style.display = 'block';
+                });
+            });
+
+            ordenadoresSaveEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    const id = ordenadoresEditForms[index].querySelector('.edit-id').value;
+                    const calorTotal = ordenadoresEditForms[index].querySelector('.edit-calorTotal').value;
+                    ordenadoresEditForms[index].style.display = 'none';
+                });
+            });
+
+            ordenadoresCancelEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    ordenadoresEditForms[index].style.display = 'none';
+                });
+            });
+
+            ordenadoresDeleteButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    const id = btn.getAttribute('data-id');
+                    if (confirm('¿Estás seguro de que deseas borrar el ordenador con ID ' + id + '?')) {
+                        document.getElementById('ordenador-row-' + id).style.display = 'none';
+                    }
+                });
+            });
+
+            // Facturas section actions
+            facturasEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    facturasEditForms[index].style.display = 'block';
+                });
+            });
+
+            facturasSaveEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    const id = facturasEditForms[index].querySelector('.edit-id').value;
+                    const precioTotal = facturasEditForms[index].querySelector('.edit-precioTotal').value;             
+                    facturasEditForms[index].style.display = 'none';
+                });
+            });
+
+            facturasCancelEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    facturasEditForms[index].style.display = 'none';
+                });
+            });
+
+            facturasDeleteButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    const id = btn.getAttribute('data-id');
+                    if (confirm('¿Estás seguro de que deseas borrar la factura con ID ' + id + '?')) {
+Once data is deleted, remove the row from the table
+                        document.getElementById('factura-row-' + id).style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
+}

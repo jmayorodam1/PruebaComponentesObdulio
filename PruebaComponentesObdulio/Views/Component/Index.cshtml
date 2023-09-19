@@ -1,0 +1,101 @@
+﻿@model IEnumerable<PruebaComponentesObdulio.Models.Componente>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Lista de Componentes</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Coste</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var componente in Model)
+            {
+                <tr id="row-@componente.Id">
+                    <td>@componente.Id</td>
+                    <td>@componente.Coste</td>
+                    <td>@componente.Descripcion</td>
+                    <td>
+                        <a class="btn-edit" data-id="@componente.Id">Edit</a> |
+                        <a href="@Url.Action("Create")" class="btn-create">Create</a>
+
+                        <a asp-action="Details" asp-route-id="@componente.Id">Details</a> |
+                        <a class="btn-delete" data-id="@componente.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">No hay componentes disponibles.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="edit-form" style="display: none;">
+    <h3>Edit Component</h3>
+    <input type="hidden" class="edit-id" />
+    <label for="edit-coste">Coste:</label>
+    <input type="number" class="edit-coste" step="0.01" />
+    <label for="edit-descripcion">Descripción:</label>
+    <input type="text" class="edit-descripcion" />
+    <button class="btn-save-edit">Save</button>
+    <button class="btn-cancel-edit">Cancel</button>
+</div>
+<div>
+    <a asp-controller="Ordenador" asp-action="Index">Ver Lista de Ordenadores</a>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editForms = document.querySelectorAll('.edit-form');
+            const editButtons = document.querySelectorAll('.btn-edit');
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+            const saveEditButtons = document.querySelectorAll('.btn-save-edit');
+            const cancelEditButtons = document.querySelectorAll('.btn-cancel-edit');
+
+            editButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    editForms[index].style.display = 'block';
+                });
+            });
+
+            saveEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    const id = editForms[index].querySelector('.edit-id').value;
+                    const coste = editForms[index].querySelector('.edit-coste').value;
+                    const descripcion = editForms[index].querySelector('.edit-descripcion').value;
+                    editForms[index].style.display = 'none';
+                });
+            });
+
+            cancelEditButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    // Clear form fields and hide the edit form
+                    editForms[index].style.display = 'none';
+                });
+            });
+
+            deleteButtons.forEach((btn, index) => {
+                btn.addEventListener('click', function () {
+                    const id = btn.getAttribute('data-id');
+                    if (confirm('¿Estás seguro de que deseas borrar el componente con ID ' + id + '?')) {
+                        document.getElementById('row-' + id).style.display = 'none';
+                        // ...
+                    }
+                });
+            });
+        });
+    </script>
+}

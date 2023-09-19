@@ -1,0 +1,54 @@
+﻿@model IEnumerable<DataBaseFirst.Models.Componente>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Componentes</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Coste</th>
+            <th>Número de Serie</th>
+            <th>Calor</th>
+            <th>Cores</th>
+            <th>Descripción</th>
+            <th>Megas</th>
+            <th>Tipo Componente</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var componente in Model)
+            {
+                <tr>
+                    <td>@componente.Id</td>
+                    <td>@componente.Coste</td>
+                    <td>@componente.NumeroSerie</td>
+                    <td>@componente.Calor</td>
+                    <td>@componente.Cores</td>
+                    <td>@componente.Descripcion</td>
+                    <td>@componente.Megas</td>
+                    <td>@componente.TipoComponente</td>
+                    <td>
+                        <a class="btn-edit" data-id="@componente.Id">Edit</a> |
+                        <a href="@Url.Action("Create")" class="btn-create">Create</a>
+
+                        <a asp-action="Details" asp-route-id="@componente.Id">Details</a> |
+                        <a class="btn-delete" data-id="@componente.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">No hay componentes disponibles.</td>
+            </tr>
+        }
+    </tbody>
+</table>
